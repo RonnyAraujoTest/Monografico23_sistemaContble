@@ -1,5 +1,3 @@
-
-
 <?php
 // Configuración dinámica para Docker o entorno Local
 $host = getenv("DB_HOST") ?: "localhost";
