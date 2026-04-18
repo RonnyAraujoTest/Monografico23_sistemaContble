@@ -1,14 +1,13 @@
 <?php
-include("conexion.php");
-
+include "auth.php";
+include "conexion.php";
 
 $where = "WHERE estado='activo'";
 
-if (isset($_GET['buscar']) && !empty($_GET['buscar'])) {
-    $buscar = $_GET['buscar'];
+if (isset($_GET["buscar"]) && !empty($_GET["buscar"])) {
+    $buscar = $_GET["buscar"];
     $where .= " AND (cedula LIKE '%$buscar%' OR id LIKE '%$buscar%')";
 }
-
 
 $query = "SELECT * FROM empleados $where ORDER BY id DESC";
 $resultado = mysqli_query($conn, $query);
@@ -29,7 +28,7 @@ $resultado = mysqli_query($conn, $query);
 
     <div class="layout">
 
-        <?php include("menu.php"); ?>
+        <?php include "menu.php"; ?>
 
         <main class="contenido">
 
@@ -42,13 +41,13 @@ $resultado = mysqli_query($conn, $query);
                 <a href="nuevo_empleado.php" class="btn-top verde">+ Nuevo Empleado</a>
             </div>
 
-            <?php if (isset($_GET['delete'])) { ?>
+            <?php if (isset($_GET["delete"])) { ?>
                 <script>
                     alert("Empleado desactivado correctamente");
                 </script>
             <?php } ?>
 
-            <?php if (isset($_GET['edit'])) { ?>
+            <?php if (isset($_GET["edit"])) { ?>
                 <script>
                     alert("Empleado actualizado correctamente");
                 </script>
@@ -60,7 +59,7 @@ $resultado = mysqli_query($conn, $query);
                 <a href="empleados.php" class="btn limpiar">Limpiar</a>
             </form>
 
-            
+
             <div class="tabla-box">
 
                 <table>
@@ -84,25 +83,29 @@ $resultado = mysqli_query($conn, $query);
 
                         <?php if (mysqli_num_rows($resultado) > 0) { ?>
 
-                            <?php while ($row = mysqli_fetch_assoc($resultado)) { ?>
+                            <?php while (
+                                $row = mysqli_fetch_assoc($resultado)
+                            ) { ?>
 
                                 <tr>
 
-                                    <td><?= $row['id']; ?></td>
-                                    <td><?= $row['nombre']; ?></td>
-                                    <td><?= $row['apellido']; ?></td>
-                                    <td><?= $row['cedula']; ?></td>
-                                    <td><?= $row['cargo']; ?></td>
+                                    <td><?= $row["id"] ?></td>
+                                    <td><?= $row["nombre"] ?></td>
+                                    <td><?= $row["apellido"] ?></td>
+                                    <td><?= $row["cedula"] ?></td>
+                                    <td><?= $row["cargo"] ?></td>
 
                                     <td class="monto">
-                                        $<?= number_format($row['salario']); ?>
+                                        $<?= number_format($row["salario"]) ?>
                                     </td>
 
-                                    <td><?= $row['telefono']; ?></td>
-                                    <td><?= $row['fecha_ingreso']; ?></td>
+                                    <td><?= $row["telefono"] ?></td>
+                                    <td><?= $row["fecha_ingreso"] ?></td>
 
                                     <td>
-                                        <?php if ($row['estado'] == 'activo') { ?>
+                                        <?php if (
+                                            $row["estado"] == "activo"
+                                        ) { ?>
                                             <span class="badge activo">Activo</span>
                                         <?php } else { ?>
                                             <span class="badge inactivo">Inactivo</span>
@@ -111,9 +114,13 @@ $resultado = mysqli_query($conn, $query);
 
                                     <td class="acciones">
 
-                                        <a href="editar_empleado.php?id=<?= $row['id']; ?>" class="btn-editar">✏</a>
+                                        <a href="editar_empleado.php?id=<?= $row[
+                                            "id"
+                                        ] ?>" class="btn-editar">✏</a>
 
-                                        <a href="eliminar_empleado.php?id=<?= $row['id']; ?>"
+                                        <a href="eliminar_empleado.php?id=<?= $row[
+                                            "id"
+                                        ] ?>"
                                             class="btn-eliminar"
                                             onclick="return confirm('¿Desactivar empleado?')">
                                             🗑

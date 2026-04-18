@@ -1,17 +1,16 @@
 <?php
-include("conexion.php");
+include "auth.php";
+include "conexion.php";
 
-
-if (!isset($_GET['id']) || $_GET['id'] == '') {
+if (!isset($_GET["id"]) || $_GET["id"] == "") {
     die("ID no válido");
 }
 
-$id = intval($_GET['id']);
+$id = intval($_GET["id"]);
 
 if ($id <= 0) {
     die("ID incorrecto");
 }
-
 
 $query = mysqli_query($conn, "SELECT * FROM estudiantes WHERE id=$id LIMIT 1");
 
@@ -42,7 +41,7 @@ $est = mysqli_fetch_assoc($query);
 
     <div class="layout">
 
-      
+
 
         <main class="main">
 
@@ -54,40 +53,56 @@ $est = mysqli_fetch_assoc($query);
 
                 <form action="actualizar_estudiante.php" method="POST">
 
-                    <input type="hidden" name="id" value="<?= $est['id']; ?>">
+                    <input type="hidden" name="id" value="<?= $est["id"] ?>">
 
-                  
+
                     <div class="input-group">
-                        <input type="text" value="<?= $est['id_institucional']; ?>" readonly>
+                        <input type="text" value="<?= $est[
+                            "id_institucional"
+                        ] ?>" readonly>
                     </div>
 
                     <div class="input-group">
-                        <input type="text" value="<?= $est['nombre']; ?>" readonly>
+                        <input type="text" value="<?= $est[
+                            "nombre"
+                        ] ?>" readonly>
                     </div>
 
                     <div class="input-group">
-                        <input type="text" value="<?= $est['apellido']; ?>" readonly>
+                        <input type="text" value="<?= $est[
+                            "apellido"
+                        ] ?>" readonly>
                     </div>
 
                     <div class="input-group">
-                        <input type="text" value="<?= $est['cedula']; ?>" readonly>
+                        <input type="text" value="<?= $est[
+                            "cedula"
+                        ] ?>" readonly>
                     </div>
 
                     <div class="input-group">
-                        <input type="date" value="<?= $est['fecha_nacimiento']; ?>" readonly>
+                        <input type="date" value="<?= $est[
+                            "fecha_nacimiento"
+                        ] ?>" readonly>
                     </div>
 
-                   
+
                     <div class="input-group">
-                        <input type="text" name="curso" value="<?= $est['curso']; ?>" required>
+                        <input type="text" name="curso" value="<?= $est[
+                            "curso"
+                        ] ?>" required>
                     </div>
 
                     <div class="input-group">
-                        <input type="text" name="telefono" value="<?= $est['telefono']; ?>" required>
+                        <input type="text" name="telefono" value="<?= $est[
+                            "telefono"
+                        ] ?>" required>
                     </div>
 
                     <div class="input-group">
-                        <input type="email" name="correo" value="<?= $est['correo']; ?>" required>
+                        <input type="email" name="correo" value="<?= $est[
+                            "correo"
+                        ] ?>" required>
                     </div>
 
                     <div class="btn-group">

@@ -1,6 +1,6 @@
 <?php
-include("conexion.php");
-
+include "auth.php";
+include "conexion.php";
 
 $query = "SELECT * FROM estudiantes WHERE estado='activo' ORDER BY id DESC";
 $resultado = mysqli_query($conn, $query);
@@ -25,11 +25,11 @@ $resultado = mysqli_query($conn, $query);
 
     <div class="layout">
 
-        <?php include("menu.php"); ?>
+        <?php include "menu.php"; ?>
 
         <main class="main">
 
-           
+
             <div class="topbar">
                 <div>
                     <h1>Gestión de Estudiantes 👨‍🎓</h1>
@@ -39,21 +39,21 @@ $resultado = mysqli_query($conn, $query);
                 <a href="nuevo_estudiante.php" class="btn-top verde">+ Nuevo</a>
             </div>
 
-           
-            <?php if (isset($_GET['edit'])) { ?>
+
+            <?php if (isset($_GET["edit"])) { ?>
                 <div class="alert success">✔ Estudiante actualizado correctamente</div>
             <?php } ?>
 
-            <?php if (isset($_GET['delete'])) { ?>
+            <?php if (isset($_GET["delete"])) { ?>
                 <div class="alert danger">🗑 Estudiante eliminado correctamente</div>
             <?php } ?>
 
-           
+
             <div class="filtros">
                 <input type="text" id="buscar" placeholder="Buscar estudiante...">
             </div>
 
-          
+
             <div class="tabla-box">
 
                 <table id="tabla">
@@ -77,31 +77,39 @@ $resultado = mysqli_query($conn, $query);
                     <tbody>
 
                         <?php if (mysqli_num_rows($resultado) > 0) { ?>
-                            <?php while ($fila = mysqli_fetch_assoc($resultado)) { ?>
+                            <?php while (
+                                $fila = mysqli_fetch_assoc($resultado)
+                            ) { ?>
 
                                 <tr>
 
-                                    <td><?= $fila['id']; ?></td>
-                                    <td><?= $fila['id_institucional']; ?></td>
-                                    <td><?= $fila['nombre']; ?></td>
-                                    <td><?= $fila['apellido']; ?></td>
-                                    <td><?= $fila['cedula']; ?></td>
-                                    <td><?= $fila['fecha_nacimiento']; ?></td>
-                                    <td><?= $fila['telefono']; ?></td>
-                                    <td><?= $fila['correo']; ?></td>
-                                    <td><?= $fila['curso']; ?></td>
+                                    <td><?= $fila["id"] ?></td>
+                                    <td><?= $fila["id_institucional"] ?></td>
+                                    <td><?= $fila["nombre"] ?></td>
+                                    <td><?= $fila["apellido"] ?></td>
+                                    <td><?= $fila["cedula"] ?></td>
+                                    <td><?= $fila["fecha_nacimiento"] ?></td>
+                                    <td><?= $fila["telefono"] ?></td>
+                                    <td><?= $fila["correo"] ?></td>
+                                    <td><?= $fila["curso"] ?></td>
 
                                     <td>
-                                        <span class="badge <?= $fila['estado']; ?>">
-                                            <?= ucfirst($fila['estado']); ?>
+                                        <span class="badge <?= $fila[
+                                            "estado"
+                                        ] ?>">
+                                            <?= ucfirst($fila["estado"]) ?>
                                         </span>
                                     </td>
 
                                     <td class="acciones">
 
-                                        <a href="editar_estudiante.php?id=<?= $fila['id']; ?>" class="btn-editar">✏</a>
+                                        <a href="editar_estudiante.php?id=<?= $fila[
+                                            "id"
+                                        ] ?>" class="btn-editar">✏</a>
 
-                                        <button class="btn-eliminar" onclick="confirmarEliminar(<?= $fila['id']; ?>)">
+                                        <button class="btn-eliminar" onclick="confirmarEliminar(<?= $fila[
+                                            "id"
+                                        ] ?>)">
                                             🗑
                                         </button>
 
@@ -129,7 +137,7 @@ $resultado = mysqli_query($conn, $query);
     </div>
 
     <script>
-      
+
         document.getElementById("buscar").addEventListener("keyup", function() {
             let filtro = this.value.toLowerCase();
             let filas = document.querySelectorAll("#tabla tbody tr");
@@ -139,7 +147,7 @@ $resultado = mysqli_query($conn, $query);
             });
         });
 
-     
+
         function confirmarEliminar(id) {
             Swal.fire({
                 title: '¿Eliminar estudiante?',

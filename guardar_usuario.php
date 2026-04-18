@@ -1,3 +1,4 @@
+<?php include "auth.php"; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,11 +36,11 @@
 
 <h2>Crear Administrador</h2>
 
-<?php if($error){ ?>
+<?php if ($error) { ?>
 <div class="alert error"><?= $error ?></div>
 <?php } ?>
 
-<?php if($success){ ?>
+<?php if ($success) { ?>
 <div class="alert success"><?= $success ?></div>
 <?php } ?>
 

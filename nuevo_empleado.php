@@ -1,4 +1,5 @@
-<?php if(isset($_GET['success'])){ ?>
+<?php include "auth.php"; ?>
+<?php if (isset($_GET["success"])) { ?>
 <script>
 alert("Empleado registrado correctamente");
 </script>

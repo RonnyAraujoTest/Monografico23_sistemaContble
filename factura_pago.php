@@ -1,30 +1,30 @@
 <?php
-include("conexion.php");
+include "auth.php";
+include "conexion.php";
 
-
-if(!isset($_GET['id']) || empty($_GET['id'])){
+if (!isset($_GET["id"]) || empty($_GET["id"])) {
     die("Error: ID no recibido");
 }
 
-$id = intval($_GET['id']);
+$id = intval($_GET["id"]);
 
-
-$query = mysqli_query($conn,"
+$query = mysqli_query(
+    $conn,
+    "
 SELECT p.*, e.nombre, e.apellido, e.curso
 FROM pagos p
 INNER JOIN estudiantes e ON p.id_estudiante = e.id
 WHERE p.id = $id
-");
+",
+);
 
-
-if(!$query){
+if (!$query) {
     die("Error en la consulta: " . mysqli_error($conn));
 }
 
-if(mysqli_num_rows($query) == 0){
+if (mysqli_num_rows($query) == 0) {
     die("No se encontró el pago");
 }
-
 
 $pago = mysqli_fetch_assoc($query);
 ?>
@@ -157,23 +157,25 @@ display:none;
 <div class="content">
 
 <div class="info">
-<p><strong>Estudiante:</strong> <?= $pago['nombre']." ".$pago['apellido']; ?></p>
-<p><strong>Curso:</strong> <?= $pago['curso']; ?></p>
-<p><strong>Fecha:</strong> <?= $pago['fecha_pago']; ?></p>
+<p><strong>Estudiante:</strong> <?= $pago["nombre"] .
+    " " .
+    $pago["apellido"] ?></p>
+<p><strong>Curso:</strong> <?= $pago["curso"] ?></p>
+<p><strong>Fecha:</strong> <?= $pago["fecha_pago"] ?></p>
 </div>
 
 <div class="divider"></div>
 
 <div class="detalle">
-<div><span>Concepto</span><span><?= $pago['concepto']; ?></span></div>
-<div><span>Monto</span><span>$<?= $pago['monto']; ?></span></div>
+<div><span>Concepto</span><span><?= $pago["concepto"] ?></span></div>
+<div><span>Monto</span><span>$<?= $pago["monto"] ?></span></div>
 </div>
 
 <div class="divider"></div>
 
 <div class="total">
 <span>Total Pagado</span>
-<span>$<?= $pago['monto']; ?></span>
+<span>$<?= $pago["monto"] ?></span>
 </div>
 
 <div class="footer">

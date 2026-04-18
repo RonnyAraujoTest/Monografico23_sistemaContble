@@ -1,8 +1,8 @@
 <?php
-include("conexion.php");
+include "auth.php";
+include "conexion.php";
 
-$id = $_GET['id'];
-
+$id = $_GET["id"];
 
 mysqli_query($conn, "UPDATE empleados SET estado='inactivo' WHERE id=$id");
 

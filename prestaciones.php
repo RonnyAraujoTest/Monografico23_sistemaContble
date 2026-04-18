@@ -1,8 +1,12 @@
 <?php
-include("conexion.php");
-include("calcular_prestaciones.php");
+include "auth.php";
+include "conexion.php";
+include "calcular_prestaciones.php";
 
-$empleados = mysqli_query($conn, "SELECT * FROM empleados WHERE estado='activo'");
+$empleados = mysqli_query(
+    $conn,
+    "SELECT * FROM empleados WHERE estado='activo'",
+);
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +26,7 @@ $empleados = mysqli_query($conn, "SELECT * FROM empleados WHERE estado='activo'"
 
 <div class="layout">
 
-<?php include("menu.php"); ?>
+<?php include "menu.php"; ?>
 
 
 <main class="main">
@@ -40,7 +44,7 @@ $empleados = mysqli_query($conn, "SELECT * FROM empleados WHERE estado='activo'"
 </div>
 
 
-<?php if (isset($_GET['ok'])) { ?>
+<?php if (isset($_GET["ok"])) { ?>
 <div class="alert success">✔ Prestación guardada correctamente</div>
 <?php } ?>
 
@@ -64,37 +68,36 @@ $empleados = mysqli_query($conn, "SELECT * FROM empleados WHERE estado='activo'"
 
 <tbody>
 
-<?php if(mysqli_num_rows($empleados)>0){ ?>
+<?php if (mysqli_num_rows($empleados) > 0) { ?>
 
 <?php while ($emp = mysqli_fetch_assoc($empleados)) {
-
-$calc = calcularPrestaciones($emp['salario'], $emp['fecha_ingreso']);
-?>
+    $calc = calcularPrestaciones($emp["salario"], $emp["fecha_ingreso"]); ?>
 
 <tr>
 
-<td><?= $emp['nombre'] . " " . $emp['apellido']; ?></td>
+<td><?= $emp["nombre"] . " " . $emp["apellido"] ?></td>
 
-<td>$<?= number_format($emp['salario']); ?></td>
+<td>$<?= number_format($emp["salario"]) ?></td>
 
-<td>$<?= number_format($calc['preaviso'], 2); ?></td>
-<td>$<?= number_format($calc['cesantia'], 2); ?></td>
-<td>$<?= number_format($calc['vacaciones'], 2); ?></td>
-<td>$<?= number_format($calc['regalia'], 2); ?></td>
+<td>$<?= number_format($calc["preaviso"], 2) ?></td>
+<td>$<?= number_format($calc["cesantia"], 2) ?></td>
+<td>$<?= number_format($calc["vacaciones"], 2) ?></td>
+<td>$<?= number_format($calc["regalia"], 2) ?></td>
 
 <td class="total">
-$<?= number_format($calc['total'], 2); ?>
+$<?= number_format($calc["total"], 2) ?>
 </td>
 
 <td>
-<a href="guardar_prestacion.php?id=<?= $emp['id']; ?>" class="btn-guardar">
+<a href="guardar_prestacion.php?id=<?= $emp["id"] ?>" class="btn-guardar">
 Guardar
 </a>
 </td>
 
 </tr>
 
-<?php } ?>
+<?php
+} ?>
 
 <?php } else { ?>
 

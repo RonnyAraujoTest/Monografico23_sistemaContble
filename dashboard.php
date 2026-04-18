@@ -1,56 +1,79 @@
 <?php
-session_start();
-include("conexion.php");
-
+include "auth.php";
+include "conexion.php";
 
 function obtenerTotal($conn, $query)
 {
     $res = mysqli_query($conn, $query);
     $data = mysqli_fetch_assoc($res);
-    return $data['total'] ?? 0;
+    return $data["total"] ?? 0;
 }
 
+$total_estudiantes = obtenerTotal(
+    $conn,
+    "SELECT COUNT(*) total FROM estudiantes WHERE estado='activo'",
+);
+$total_empleados = obtenerTotal($conn, "SELECT COUNT(*) total FROM empleados");
+$total_pagos = obtenerTotal($conn, "SELECT SUM(monto) total FROM pagos");
+$total_nomina = obtenerTotal(
+    $conn,
+    "SELECT SUM(total_pagado) total FROM nomina",
+);
 
-$total_estudiantes = obtenerTotal($conn, "SELECT COUNT(*) total FROM estudiantes WHERE estado='activo'");
-$total_empleados   = obtenerTotal($conn, "SELECT COUNT(*) total FROM empleados");
-$total_pagos       = obtenerTotal($conn, "SELECT SUM(monto) total FROM pagos");
-$total_nomina      = obtenerTotal($conn, "SELECT SUM(total_pagado) total FROM nomina");
-
-
-$grafico = mysqli_query($conn, "
+$grafico = mysqli_query(
+    $conn,
+    "
 SELECT MONTH(fecha_pago) mes, SUM(monto) total
 FROM pagos GROUP BY mes ORDER BY mes
-");
+",
+);
 
 $meses = [];
 $totales = [];
 
-$nombres = [1 => 'Ene', 2 => 'Feb', 3 => 'Mar', 4 => 'Abr', 5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Ago', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dic'];
+$nombres = [
+    1 => "Ene",
+    2 => "Feb",
+    3 => "Mar",
+    4 => "Abr",
+    5 => "May",
+    6 => "Jun",
+    7 => "Jul",
+    8 => "Ago",
+    9 => "Sep",
+    10 => "Oct",
+    11 => "Nov",
+    12 => "Dic",
+];
 
 while ($g = mysqli_fetch_assoc($grafico)) {
-    $meses[] = $nombres[$g['mes']];
-    $totales[] = $g['total'];
+    $meses[] = $nombres[$g["mes"]];
+    $totales[] = $g["total"];
 }
 
-
-$graficoNomina = mysqli_query($conn, "
+$graficoNomina = mysqli_query(
+    $conn,
+    "
 SELECT MONTH(fecha_pago) mes, SUM(total_pagado) total
 FROM nomina GROUP BY mes ORDER BY mes
-");
+",
+);
 
 $totalesNomina = [];
 while ($n = mysqli_fetch_assoc($graficoNomina)) {
-    $totalesNomina[] = $n['total'];
+    $totalesNomina[] = $n["total"];
 }
 
 while (count($totalesNomina) < count($meses)) {
     $totalesNomina[] = 0;
 }
 
-
-$historial = mysqli_query($conn, "
+$historial = mysqli_query(
+    $conn,
+    "
 SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
-");
+",
+);
 ?>
 
 <!DOCTYPE html>
@@ -71,18 +94,18 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
 
     <div class="layout">
 
-       
-        <?php include("menu.php"); ?>
+
+        <?php include "menu.php"; ?>
 
         <main class="main">
 
-       
+
             <div class="topbar">
                 <h1>Panel de Control</h1>
                 <p class="sub">Resumen general del sistema</p>
             </div>
 
-         
+
             <div class="cards">
 
                 <div class="card">
@@ -107,7 +130,7 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
 
             </div>
 
-         
+
             <div class="graficos">
 
                 <div class="grafico-card">
@@ -128,7 +151,7 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
 
             </div>
 
-        
+
             <div class="tabla-box">
 
                 <h3>Últimos Movimientos</h3>
@@ -146,10 +169,10 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($historial)) { ?>
                             <tr>
-                                <td><?= $row['fecha'] ?></td>
-                                <td><?= $row['tipo_movimiento'] ?></td>
-                                <td><?= $row['descripcion'] ?></td>
-                                <td>$<?= number_format($row['monto']) ?></td>
+                                <td><?= $row["fecha"] ?></td>
+                                <td><?= $row["tipo_movimiento"] ?></td>
+                                <td><?= $row["descripcion"] ?></td>
+                                <td>$<?= number_format($row["monto"]) ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
@@ -163,12 +186,12 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
 
 
     <script>
-      
-        const meses = <?= json_encode($meses); ?>;
-        const pagos = <?= json_encode($totales); ?>;
-        const nomina = <?= json_encode($totalesNomina); ?>;
 
-      
+        const meses = <?= json_encode($meses) ?>;
+        const pagos = <?= json_encode($totales) ?>;
+        const nomina = <?= json_encode($totalesNomina) ?>;
+
+
         const ctxBar = document.getElementById("graficoPagos").getContext("2d");
         const ctxLine = document.getElementById("graficoComparativo").getContext("2d");
         const ctxDonut = document.getElementById("graficoGeneral");
@@ -185,7 +208,7 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
         gradNomina.addColorStop(0, "rgba(244,166,181,0.35)");
         gradNomina.addColorStop(1, "rgba(244,166,181,0)");
 
-     
+
         new Chart(ctxBar, {
             type: 'bar',
             data: {
@@ -201,7 +224,7 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-            
+
                 plugins: {
                     legend: {
                         display: false
@@ -233,7 +256,7 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
             }
         });
 
-  
+
         new Chart(ctxDonut, {
             type: 'doughnut',
             data: {
@@ -247,7 +270,7 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-          
+
                 cutout: '65%',
                 plugins: {
                     legend: {
@@ -257,7 +280,7 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
             }
         });
 
-     
+
         new Chart(ctxLine, {
             type: 'line',
             data: {
@@ -285,7 +308,7 @@ SELECT * FROM historial_movimientos ORDER BY fecha DESC LIMIT 5
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-              
+
                 plugins: {
                     legend: {
                         position: 'top'

@@ -1,36 +1,34 @@
 <?php
-include("conexion.php");
-
+include "auth.php";
+include "conexion.php";
 
 $buscar = "";
-$fecha  = "";
+$fecha = "";
 $metodo = "";
 
-if (isset($_GET['buscar']) && $_GET['buscar'] != "") {
-    $buscar = mysqli_real_escape_string($conn, $_GET['buscar']);
+if (isset($_GET["buscar"]) && $_GET["buscar"] != "") {
+    $buscar = mysqli_real_escape_string($conn, $_GET["buscar"]);
 }
 
-if (isset($_GET['fecha']) && $_GET['fecha'] != "") {
-    $fecha = mysqli_real_escape_string($conn, $_GET['fecha']);
+if (isset($_GET["fecha"]) && $_GET["fecha"] != "") {
+    $fecha = mysqli_real_escape_string($conn, $_GET["fecha"]);
 }
 
-if (isset($_GET['metodo']) && $_GET['metodo'] != "") {
-    $metodo = mysqli_real_escape_string($conn, $_GET['metodo']);
+if (isset($_GET["metodo"]) && $_GET["metodo"] != "") {
+    $metodo = mysqli_real_escape_string($conn, $_GET["metodo"]);
 }
-
 
 $query = "
-SELECT pagos.*, estudiantes.nombre, estudiantes.apellido 
-FROM pagos 
-INNER JOIN estudiantes 
+SELECT pagos.*, estudiantes.nombre, estudiantes.apellido
+FROM pagos
+INNER JOIN estudiantes
 ON pagos.id_estudiante = estudiantes.id
 WHERE 1=1
 ";
 
-
 if ($buscar != "") {
     $query .= " AND (
-        estudiantes.nombre LIKE '%$buscar%' 
+        estudiantes.nombre LIKE '%$buscar%'
         OR estudiantes.apellido LIKE '%$buscar%'
     )";
 }
@@ -43,9 +41,7 @@ if ($metodo != "") {
     $query .= " AND pagos.metodo_pago = '$metodo'";
 }
 
-
 $query .= " ORDER BY pagos.fecha_pago DESC";
-
 
 $resultado = mysqli_query($conn, $query);
 
@@ -69,7 +65,7 @@ if (!$resultado) {
 
     <div class="layout">
 
-        <?php include("menu.php"); ?>
+        <?php include "menu.php"; ?>
 
         <main class="contenido">
 
@@ -87,7 +83,7 @@ if (!$resultado) {
 
             </div>
 
-        
+
             <form method="GET" class="filtros">
 
                 <input type="text" name="buscar"
@@ -100,9 +96,15 @@ if (!$resultado) {
                 <select name="metodo">
                     <option value="">Método de pago</option>
 
-                    <option value="Efectivo" <?= ($metodo == 'Efectivo') ? 'selected' : '' ?>>Efectivo</option>
-                    <option value="Transferencia" <?= ($metodo == 'Transferencia') ? 'selected' : '' ?>>Transferencia</option>
-                    <option value="Tarjeta" <?= ($metodo == 'Tarjeta') ? 'selected' : '' ?>>Tarjeta</option>
+                    <option value="Efectivo" <?= $metodo == "Efectivo"
+                        ? "selected"
+                        : "" ?>>Efectivo</option>
+                    <option value="Transferencia" <?= $metodo == "Transferencia"
+                        ? "selected"
+                        : "" ?>>Transferencia</option>
+                    <option value="Tarjeta" <?= $metodo == "Tarjeta"
+                        ? "selected"
+                        : "" ?>>Tarjeta</option>
 
                 </select>
 
@@ -111,7 +113,7 @@ if (!$resultado) {
 
             </form>
 
-           
+
             <div class="tabla-box">
 
                 <table>
@@ -130,23 +132,34 @@ if (!$resultado) {
 
                         <?php if (mysqli_num_rows($resultado) > 0) { ?>
 
-                            <?php while ($fila = mysqli_fetch_assoc($resultado)) { ?>
+                            <?php while (
+                                $fila = mysqli_fetch_assoc($resultado)
+                            ) { ?>
 
                                 <tr>
 
-                                    <td><?= $fila['nombre'] . " " . $fila['apellido']; ?></td>
+                                    <td><?= $fila["nombre"] .
+                                        " " .
+                                        $fila["apellido"] ?></td>
 
-                                    <td><?= htmlspecialchars($fila['concepto']); ?></td>
+                                    <td><?= htmlspecialchars(
+                                        $fila["concepto"],
+                                    ) ?></td>
 
                                     <td class="monto">
-                                        $<?= number_format($fila['monto'], 2); ?>
+                                        $<?= number_format($fila["monto"], 2) ?>
                                     </td>
 
-                                    <td><?= date("d/m/Y", strtotime($fila['fecha_pago'])); ?></td>
+                                    <td><?= date(
+                                        "d/m/Y",
+                                        strtotime($fila["fecha_pago"]),
+                                    ) ?></td>
 
                                     <td>
-                                        <span class="badge <?= strtolower($fila['metodo_pago']); ?>">
-                                            <?= $fila['metodo_pago']; ?>
+                                        <span class="badge <?= strtolower(
+                                            $fila["metodo_pago"],
+                                        ) ?>">
+                                            <?= $fila["metodo_pago"] ?>
                                         </span>
                                     </td>
 

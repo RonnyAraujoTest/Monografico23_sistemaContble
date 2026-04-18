@@ -1,6 +1,10 @@
 <?php
-include("conexion.php");
-$estudiantes = mysqli_query($conn, "SELECT * FROM estudiantes WHERE estado='activo'");
+include "auth.php";
+include "conexion.php";
+$estudiantes = mysqli_query(
+    $conn,
+    "SELECT * FROM estudiantes WHERE estado='activo'",
+);
 ?>
 
 <!DOCTYPE html>
@@ -27,8 +31,12 @@ $estudiantes = mysqli_query($conn, "SELECT * FROM estudiantes WHERE estado='acti
                         <option value="" disabled selected>Seleccionar estudiante</option>
 
                         <?php while ($e = mysqli_fetch_assoc($estudiantes)) { ?>
-                            <option value="<?= $e['id']; ?>">
-                                <?= $e['nombre'] . " " . $e['apellido'] . " - " . $e['curso']; ?>
+                            <option value="<?= $e["id"] ?>">
+                                <?= $e["nombre"] .
+                                    " " .
+                                    $e["apellido"] .
+                                    " - " .
+                                    $e["curso"] ?>
                             </option>
                         <?php } ?>
 

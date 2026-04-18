@@ -1,20 +1,22 @@
 <?php
-include("conexion.php");
+include "auth.php";
+include "conexion.php";
 
-
-if (!isset($_GET['id']) || empty($_GET['id'])) {
+if (!isset($_GET["id"]) || empty($_GET["id"])) {
     die("Recibo no válido");
 }
 
-$id = intval($_GET['id']);
+$id = intval($_GET["id"]);
 
-
-$query = mysqli_query($conn, "
+$query = mysqli_query(
+    $conn,
+    "
 SELECT n.*, e.nombre, e.apellido, e.cargo
 FROM nomina n
 JOIN empleados e ON n.id_empleado = e.id
 WHERE n.id = $id
-");
+",
+);
 
 if (mysqli_num_rows($query) == 0) {
     die("No se encontró el pago");
@@ -30,7 +32,7 @@ $pago = mysqli_fetch_assoc($query);
     <meta charset="UTF-8">
     <title>Recibo de Nómina</title>
 
-    <style> 
+    <style>
         body {
             font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #031926, #0b3c5d);
@@ -41,7 +43,7 @@ $pago = mysqli_fetch_assoc($query);
             margin: 0;
         }
 
-       
+
         .ticket {
             width: 420px;
             background: white;
@@ -50,7 +52,7 @@ $pago = mysqli_fetch_assoc($query);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
 
-      
+
         .header {
             background: linear-gradient(135deg, #468189, #77ACA2);
             color: white;
@@ -68,18 +70,18 @@ $pago = mysqli_fetch_assoc($query);
             opacity: 0.8;
         }
 
-    
+
         .content {
             padding: 25px;
         }
 
-     
+
         .info p {
             margin: 6px 0;
             font-size: 14px;
         }
 
-     
+
         .divider {
             margin: 15px 0;
             border-top: 1px dashed #ccc;
@@ -93,7 +95,7 @@ $pago = mysqli_fetch_assoc($query);
             font-size: 14px;
         }
 
-     
+
         .total {
             margin-top: 15px;
             padding: 12px;
@@ -106,7 +108,7 @@ $pago = mysqli_fetch_assoc($query);
             color: #031926;
         }
 
-        
+
         .footer {
             text-align: center;
             font-size: 12px;
@@ -114,7 +116,7 @@ $pago = mysqli_fetch_assoc($query);
             margin-top: 15px;
         }
 
-  
+
         .btn {
             margin: 20px;
             width: calc(100% - 40px);
@@ -132,7 +134,7 @@ $pago = mysqli_fetch_assoc($query);
             transform: scale(1.05);
         }
 
-    
+
         @media print {
             body {
                 background: white;
@@ -158,27 +160,47 @@ $pago = mysqli_fetch_assoc($query);
         <div class="content">
 
             <div class="info">
-                <p><strong>Empleado:</strong> <?= $pago['nombre'] . " " . $pago['apellido']; ?></p>
-                <p><strong>Cargo:</strong> <?= $pago['cargo']; ?></p>
-                <p><strong>Fecha:</strong> <?= $pago['fecha_pago']; ?></p>
+                <p><strong>Empleado:</strong> <?= $pago["nombre"] .
+                    " " .
+                    $pago["apellido"] ?></p>
+                <p><strong>Cargo:</strong> <?= $pago["cargo"] ?></p>
+                <p><strong>Fecha:</strong> <?= $pago["fecha_pago"] ?></p>
             </div>
 
             <div class="divider"></div>
 
             <div class="detalle">
-                <div><span>Salario</span><span>$<?= number_format($pago['salario'], 2); ?></span></div>
-                <div><span>AFP</span><span>$<?= number_format($pago['afp'], 2); ?></span></div>
-                <div><span>SFS</span><span>$<?= number_format($pago['sfs'], 2); ?></span></div>
-                <div><span>ISR</span><span>$<?= number_format($pago['isr'], 2); ?></span></div>
-                <div><span>Bono</span><span>$<?= number_format($pago['bono'], 2); ?></span></div>
-                <div><span>Deducción</span><span>$<?= number_format($pago['deduccion'], 2); ?></span></div>
+                <div><span>Salario</span><span>$<?= number_format(
+                    $pago["salario"],
+                    2,
+                ) ?></span></div>
+                <div><span>AFP</span><span>$<?= number_format(
+                    $pago["afp"],
+                    2,
+                ) ?></span></div>
+                <div><span>SFS</span><span>$<?= number_format(
+                    $pago["sfs"],
+                    2,
+                ) ?></span></div>
+                <div><span>ISR</span><span>$<?= number_format(
+                    $pago["isr"],
+                    2,
+                ) ?></span></div>
+                <div><span>Bono</span><span>$<?= number_format(
+                    $pago["bono"],
+                    2,
+                ) ?></span></div>
+                <div><span>Deducción</span><span>$<?= number_format(
+                    $pago["deduccion"],
+                    2,
+                ) ?></span></div>
             </div>
 
             <div class="divider"></div>
 
             <div class="total">
                 <span>Total Pagado</span>
-                <span>$<?= number_format($pago['total_pagado'], 2); ?></span>
+                <span>$<?= number_format($pago["total_pagado"], 2) ?></span>
             </div>
 
             <div class="footer">

@@ -1,6 +1,7 @@
 <?php
-include("conexion.php");
-$empleados = mysqli_query($conn,"SELECT * FROM empleados");
+include "auth.php";
+include "conexion.php";
+$empleados = mysqli_query($conn, "SELECT * FROM empleados");
 ?>
 
 <!DOCTYPE html>
@@ -28,11 +29,11 @@ $empleados = mysqli_query($conn,"SELECT * FROM empleados");
 <select name="id_empleado" id="empleado" required onchange="llenarSalario()">
 <option value="" disabled selected>Seleccionar empleado</option>
 
-<?php while($emp = mysqli_fetch_assoc($empleados)){ ?>
-<option 
-value="<?= $emp['id']; ?>" 
-data-salario="<?= $emp['salario']; ?>">
-<?= $emp['nombre']." ".$emp['apellido']; ?>
+<?php while ($emp = mysqli_fetch_assoc($empleados)) { ?>
+<option
+value="<?= $emp["id"] ?>"
+data-salario="<?= $emp["salario"] ?>">
+<?= $emp["nombre"] . " " . $emp["apellido"] ?>
 </option>
 <?php } ?>
 

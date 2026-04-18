@@ -1,15 +1,16 @@
 <?php
-include("conexion.php");
+include "auth.php";
+include "conexion.php";
 
-if(!isset($_GET['id']) || empty($_GET['id'])){
+if (!isset($_GET["id"]) || empty($_GET["id"])) {
     die("ID no válido");
 }
 
-$id = intval($_GET['id']);
+$id = intval($_GET["id"]);
 
 $query = mysqli_query($conn, "SELECT * FROM empleados WHERE id='$id'");
 
-if(mysqli_num_rows($query) == 0){
+if (mysqli_num_rows($query) == 0) {
     die("Empleado no encontrado");
 }
 
@@ -35,49 +36,69 @@ $emp = mysqli_fetch_assoc($query);
 
 <form action="actualizar_empleado.php" method="POST">
 
-<input type="hidden" name="id" value="<?= $emp['id']; ?>">
+<input type="hidden" name="id" value="<?= $emp["id"] ?>">
 
 
 <div class="input-box">
-<input type="text" value="<?= $emp['nombre']; ?>" readonly placeholder="Nombre">
+<input type="text" value="<?= $emp["nombre"] ?>" readonly placeholder="Nombre">
 </div>
 
 <div class="input-box">
-<input type="text" value="<?= $emp['apellido']; ?>" readonly placeholder="Apellido">
+<input type="text" value="<?= $emp[
+    "apellido"
+] ?>" readonly placeholder="Apellido">
 </div>
 
 <div class="input-box">
-<input type="text" value="<?= $emp['cedula']; ?>" readonly placeholder="Cédula">
+<input type="text" value="<?= $emp["cedula"] ?>" readonly placeholder="Cédula">
 </div>
 
 <div class="input-box">
-<input type="date" value="<?= $emp['fecha_nacimiento']; ?>" readonly>
+<input type="date" value="<?= $emp["fecha_nacimiento"] ?>" readonly>
 </div>
 
 <div class="input-box">
 <select name="cargo" id="cargo" onchange="asignarSalario()" required>
 <option value="">Seleccionar cargo</option>
 
-<option value="Director" <?= $emp['cargo']=="Director"?"selected":""; ?>>Director</option>
-<option value="Secretaria" <?= $emp['cargo']=="Secretaria"?"selected":""; ?>>Secretaria</option>
-<option value="Coordinador" <?= $emp['cargo']=="Coordinador"?"selected":""; ?>>Coordinador</option>
-<option value="Profesor" <?= $emp['cargo']=="Profesor"?"selected":""; ?>>Profesor</option>
-<option value="Conserje" <?= $emp['cargo']=="Conserje"?"selected":""; ?>>Conserje</option>
-<option value="Asistente" <?= $emp['cargo']=="Asistente"?"selected":""; ?>>Asistente</option>
+<option value="Director" <?= $emp["cargo"] == "Director"
+    ? "selected"
+    : "" ?>>Director</option>
+<option value="Secretaria" <?= $emp["cargo"] == "Secretaria"
+    ? "selected"
+    : "" ?>>Secretaria</option>
+<option value="Coordinador" <?= $emp["cargo"] == "Coordinador"
+    ? "selected"
+    : "" ?>>Coordinador</option>
+<option value="Profesor" <?= $emp["cargo"] == "Profesor"
+    ? "selected"
+    : "" ?>>Profesor</option>
+<option value="Conserje" <?= $emp["cargo"] == "Conserje"
+    ? "selected"
+    : "" ?>>Conserje</option>
+<option value="Asistente" <?= $emp["cargo"] == "Asistente"
+    ? "selected"
+    : "" ?>>Asistente</option>
 
 </select>
 </div>
 
 <div class="input-box">
-<input type="number" name="salario" id="salario" value="<?= $emp['salario']; ?>" readonly placeholder="Salario">
+<input type="number" name="salario" id="salario" value="<?= $emp[
+    "salario"
+] ?>" readonly placeholder="Salario">
 </div>
 
 <div class="input-box">
-<input type="text" name="telefono" value="<?= $emp['telefono']; ?>" placeholder="Teléfono">
+<input type="text" name="telefono" value="<?= $emp[
+    "telefono"
+] ?>" placeholder="Teléfono">
 </div>
 
 <div class="input-box">
-<input type="email" name="correo" value="<?= $emp['correo']; ?>" placeholder="Correo">
+<input type="email" name="correo" value="<?= $emp[
+    "correo"
+] ?>" placeholder="Correo">
 </div>
 
 <button type="submit" class="btn-guardar">

@@ -1,40 +1,43 @@
 <?php
-include("conexion.php");
+include "auth.php";
+include "conexion.php";
 
+$nombre = $_POST["nombre"];
+$apellido = $_POST["apellido"];
+$cedula = $_POST["cedula"];
+$fecha_nacimiento = $_POST["fecha_nacimiento"];
+$curso = $_POST["curso"];
+$telefono = $_POST["telefono"];
+$correo = $_POST["correo"];
 
-$nombre = $_POST['nombre'];
-$apellido = $_POST['apellido'];
-$cedula = $_POST['cedula'];
-$fecha_nacimiento = $_POST['fecha_nacimiento'];
-$curso = $_POST['curso'];
-$telefono = $_POST['telefono'];
-$correo = $_POST['correo'];
-
-if(!is_numeric($cedula)){
+if (!is_numeric($cedula)) {
     die("Error: La cédula solo debe contener números");
 }
 
-
-$check = mysqli_query($conn, "SELECT * FROM estudiantes WHERE cedula='$cedula'");
-if(mysqli_num_rows($check) > 0){
+$check = mysqli_query(
+    $conn,
+    "SELECT * FROM estudiantes WHERE cedula='$cedula'",
+);
+if (mysqli_num_rows($check) > 0) {
     die("Error: Esta cédula ya está registrada");
 }
 
-
 $year = date("y");
 
-$query = mysqli_query($conn, "SELECT MAX(id_institucional) as max_id FROM estudiantes");
+$query = mysqli_query(
+    $conn,
+    "SELECT MAX(id_institucional) as max_id FROM estudiantes",
+);
 $row = mysqli_fetch_assoc($query);
 
-if($row['max_id']){
-    $num = substr($row['max_id'], 2);
+if ($row["max_id"]) {
+    $num = substr($row["max_id"], 2);
     $nuevo = str_pad($num + 1, 3, "0", STR_PAD_LEFT);
-}else{
+} else {
     $nuevo = "001";
 }
 
 $id_institucional = $year . $nuevo;
-
 
 $sql = "INSERT INTO estudiantes(
     id_institucional,
@@ -58,19 +61,18 @@ $sql = "INSERT INTO estudiantes(
 
 $result = mysqli_query($conn, $sql);
 
-
-if($result){
-
-   
-    mysqli_query($conn, "
+if ($result) {
+    mysqli_query(
+        $conn,
+        "
         INSERT INTO historial_movimientos(tipo_movimiento, descripcion, monto)
         VALUES('Registro','Nuevo estudiante registrado: $nombre $apellido',0)
-    ");
+    ",
+    );
 
     header("Location: estudiantes.php?success=1");
     exit();
-
-}else{
+} else {
     echo "Error al guardar: " . mysqli_error($conn);
 }
 ?>

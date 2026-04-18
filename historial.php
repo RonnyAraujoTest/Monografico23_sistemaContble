@@ -1,22 +1,21 @@
 <?php
-include("conexion.php");
-
+include "auth.php";
+include "conexion.php";
 
 $where = "WHERE 1=1";
 
-$tipo  = "";
+$tipo = "";
 $fecha = "";
 
-if (!empty($_GET['tipo'])) {
-    $tipo = mysqli_real_escape_string($conn, $_GET['tipo']);
+if (!empty($_GET["tipo"])) {
+    $tipo = mysqli_real_escape_string($conn, $_GET["tipo"]);
     $where .= " AND tipo_movimiento = '$tipo'";
 }
 
-if (!empty($_GET['fecha'])) {
-    $fecha = mysqli_real_escape_string($conn, $_GET['fecha']);
+if (!empty($_GET["fecha"])) {
+    $fecha = mysqli_real_escape_string($conn, $_GET["fecha"]);
     $where .= " AND DATE(fecha) = '$fecha'";
 }
-
 
 $query = "SELECT * FROM historial_movimientos $where ORDER BY fecha DESC";
 $resultado = mysqli_query($conn, $query);
@@ -37,11 +36,11 @@ $resultado = mysqli_query($conn, $query);
 
     <div class="layout">
 
-        <?php include("menu.php"); ?>
+        <?php include "menu.php"; ?>
 
         <main class="contenido">
 
-         
+
             <div class="topbar">
 
                 <div>
@@ -56,15 +55,21 @@ $resultado = mysqli_query($conn, $query);
 
             </div>
 
-       
+
             <form method="GET" class="filtros">
 
                 <select name="tipo">
                     <option value="">Tipo de movimiento</option>
 
-                    <option value="Pago" <?= ($tipo == 'Pago') ? 'selected' : '' ?>>Pago</option>
-                    <option value="Registro" <?= ($tipo == 'Registro') ? 'selected' : '' ?>>Registro</option>
-                    <option value="Eliminación" <?= ($tipo == 'Eliminación') ? 'selected' : '' ?>>Eliminación</option>
+                    <option value="Pago" <?= $tipo == "Pago"
+                        ? "selected"
+                        : "" ?>>Pago</option>
+                    <option value="Registro" <?= $tipo == "Registro"
+                        ? "selected"
+                        : "" ?>>Registro</option>
+                    <option value="Eliminación" <?= $tipo == "Eliminación"
+                        ? "selected"
+                        : "" ?>>Eliminación</option>
 
                 </select>
 
@@ -76,7 +81,7 @@ $resultado = mysqli_query($conn, $query);
 
             </form>
 
-           
+
             <div class="tabla-box">
 
                 <table>
@@ -94,17 +99,24 @@ $resultado = mysqli_query($conn, $query);
 
                         <?php if (mysqli_num_rows($resultado) > 0) { ?>
 
-                            <?php while ($row = mysqli_fetch_assoc($resultado)) { ?>
+                            <?php while (
+                                $row = mysqli_fetch_assoc($resultado)
+                            ) { ?>
 
                                 <tr>
 
-                                    <td><?= $row['fecha']; ?></td>
+                                    <td><?= $row["fecha"] ?></td>
 
                                     <td>
-                                        <?php if ($row['tipo_movimiento'] == "Pago") { ?>
+                                        <?php if (
+                                            $row["tipo_movimiento"] == "Pago"
+                                        ) { ?>
                                             <span class="badge pago">Pago</span>
 
-                                        <?php } elseif ($row['tipo_movimiento'] == "Registro") { ?>
+                                        <?php } elseif (
+                                            $row["tipo_movimiento"] ==
+                                            "Registro"
+                                        ) { ?>
                                             <span class="badge registro">Registro</span>
 
                                         <?php } else { ?>
@@ -112,10 +124,10 @@ $resultado = mysqli_query($conn, $query);
                                         <?php } ?>
                                     </td>
 
-                                    <td><?= $row['descripcion']; ?></td>
+                                    <td><?= $row["descripcion"] ?></td>
 
                                     <td class="monto">
-                                        $<?= number_format($row['monto']); ?>
+                                        $<?= number_format($row["monto"]) ?>
                                     </td>
 
                                 </tr>
