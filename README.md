@@ -119,8 +119,41 @@ Desarrolladora principal del sistema SICOLAR
 
 Proyecto desarrollado como parte de un trabajo académico, enfocado en la creación de una solución tecnológica para la gestión administrativa de un centro educativo.
 
- 🛠️ Instalación
+ 🛠️ Instalación y Ejecución con Docker
 
-1. Clonar el repositorio:
-bash
-git clone https://github.com/tu-usuario/tu-repo.git
+Sigue estos pasos para correr el proyecto localmente usando Docker:
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/tu-usuario/tu-repo.git
+   cd Monografico23_sistemaContble
+   ```
+
+2. **Levantar los contenedores:**
+   Asegúrate de tener Docker y Docker Compose instalados. Ejecuta el siguiente comando en la raíz del proyecto:
+   ```bash
+   docker-compose up -d --build
+   ```
+   *Esto descargará las imágenes de PHP y MySQL, construirá el contenedor del servidor web e inicializará la base de datos automáticamente.*
+
+3. **Acceder a la aplicación:**
+   Una vez que los contenedores estén corriendo, abre tu navegador y entra a:
+   [http://localhost:8080](http://localhost:8080)
+
+4. **Configuración de la Base de Datos:**
+   El sistema está preconfigurado para conectarse automáticamente. Si necesitas acceder manualmente a la base de datos (por ejemplo, vía TablePlus o DBeaver), utiliza los siguientes datos:
+   - **Host:** `localhost`
+   - **Puerto:** `3306`
+   - **Usuario:** `root`
+   - **Contraseña:** `0101`
+   - **Base de Datos:** `sistemacontable`
+
+5. **Detener el sistema:**
+   Para detener los contenedores sin borrar los datos:
+   ```bash
+   docker-compose stop
+   ```
+   Para eliminar los contenedores:
+   ```bash
+   docker-compose down
+   ```
