@@ -1,5 +1,4 @@
 <?php
-include "auth.php";
 include "conexion.php";
 
 $error = "";
